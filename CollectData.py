@@ -3,12 +3,30 @@ import TeamTfrrs as tms
 import ConferenceTfrrs as con
 import NatMeetTFRRS as nat
 import pandas as pd
+import time
+import numpy as np
 
 team_2_conf = {
         'M' : {},
         'F' : {}
     }
 existing_athletes = set()
+
+
+def prog_bar(percent, string, time=None, start=False):
+    prog = int((percent / 0.05) + 0.01)
+    if len(string) == prog:
+        if start:
+            print(f'| -------------------- | {percent:.2f} - {time:.4f}')
+        return string
+    while len(string) < prog:
+        string += '#'
+    remain = ''
+    for left in range(20-prog):
+        remain += '-'
+    print('|', string + remain, f'| {percent:.2f} - {time:.4f}')
+    return string
+
 
 
 def handleTmStr(tm):
@@ -190,6 +208,8 @@ def athletes_from_meet():
     print('Meets')
     for meetname, years in nat.nat_meet_ids().items():
         for year, id in years.items():
+            if year != 2019:
+                continue
             print(year, end=', ')
             meet = nat.Meet(id, meetname)
             nat_athletes.append(meet)
@@ -199,11 +219,15 @@ def athletes_from_meet():
     }
     print('\nAthletes')
     for i, nat_meet in enumerate(nat_athletes):
-        print(f'{i+1}/{len(nat_athletes)}', end=', ')
+        print(f'{i+1}/{len(nat_athletes)}')
         for g, athletes in nat_meet.AthleteInfo.items():
             gender = g.upper()
             unique_athletes = set(athletes) - existing_athletes
-            for id in unique_athletes:
+            s = len(unique_athletes)
+            times = []
+            t0 = time.time()
+            string = ''
+            for j, id in enumerate(unique_athletes):
                 athlete = athletes[id]
                 name, id, tm = athlete
                 formated_name = handleAthName(name)
@@ -213,11 +237,15 @@ def athletes_from_meet():
                     id, tm_url_name, formated_name
                 )
                 all_athletes[gender].append(athlete)
+                t1 = time.time()
+                times.append(t1-t0)
+                string = prog_bar(j/s, string, time=np.mean(np.array([times])), start=(j==0))
+                t0 = t1
     return all_athletes
 
 
 def main():
-    ath_conf = athletes_from_conf()
+    # ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
 
