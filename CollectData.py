@@ -95,6 +95,7 @@ def write_athlete_results(dic1, dic2, gender):
                 times.append(t1 - t0)
                 string = prog_bar(j / s, string, time=np.mean(np.array([times])), start=(j == 0))
                 t0 = t1
+            prog_bar(1.00, string+'#', time=np.mean(np.array([times])))
     conferences = team_2_conf[gender]
     ls = dic2[gender]
     print('write from meets')
@@ -131,6 +132,7 @@ def write_athlete_results(dic1, dic2, gender):
         times.append(t1 - t0)
         string = prog_bar(j / s, string, time=np.mean(np.array([times])), start=(j == 0))
         t0 = t1
+    prog_bar(1.00, string + '#', time=np.mean(np.array([times])))
     print('Write file')
     pd.DataFrame(
         data=table_list,
@@ -264,6 +266,7 @@ def athletes_from_meet():
                 times.append(t1-t0)
                 string = prog_bar(j/s, string, time=np.mean(np.array([times])), start=(j==0))
                 t0 = t1
+            prog_bar(1.00, string+'#', time=np.mean(np.array([times])))
     return all_athletes
 
 
