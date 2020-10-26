@@ -59,6 +59,7 @@ def write_athlete_results(dic1, dic2, gender):
     ]
     table_list = []
     subdic1 = dic1[gender]
+    print('write from conferences')
     for conference, team in subdic1.items():
         for teamName, athletes in team.items():
             for athlete in athletes:
@@ -83,6 +84,7 @@ def write_athlete_results(dic1, dic2, gender):
                         table_list.append(row)
     conferences = team_2_conf[gender]
     ls = dic2[gender]
+    print('write from meets')
     for athlete in ls:
         athlete_info = athlete.getAthleteInfo()
         for meet_id, meet_info in athlete.getMeets().items():
@@ -107,6 +109,7 @@ def write_athlete_results(dic1, dic2, gender):
                     data[2]
                 ]
                 table_list.append(row)
+    print('Write file')
     pd.DataFrame(
         data=table_list,
         columns=header
@@ -250,6 +253,7 @@ def main():
     print(time.time()-t_start)
     write_athlete_results(ath_conf, ath_meet, 'M')
     print(time.time()-t_start)
+    print('Done')
 
 
 if __name__ == '__main__':
