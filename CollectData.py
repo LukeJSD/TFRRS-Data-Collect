@@ -245,7 +245,7 @@ def athletes_from_meet():
 
 
 def main():
-    # ath_conf = athletes_from_conf()
+    ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
 
