@@ -207,8 +207,6 @@ def athletes_from_meet():
     print('Meets')
     for meetname, years in nat.nat_meet_ids().items():
         for year, id in years.items():
-            if year != 2019:
-                continue
             print(year, end=', ')
             meet = nat.Meet(id, meetname)
             nat_athletes.append(meet)
@@ -245,9 +243,13 @@ def athletes_from_meet():
 
 
 def main():
+    t_start = time.time()
     ath_conf = athletes_from_conf()
+    print(time.time()-t_start)
     ath_meet = athletes_from_meet()
+    print(time.time()-t_start)
     write_athlete_results(ath_conf, ath_meet, 'M')
+    print(time.time()-t_start)
 
 
 if __name__ == '__main__':
