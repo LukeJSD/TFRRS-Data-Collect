@@ -46,7 +46,7 @@ def write_athlete_results(dic, gender):
                             athlete_info['Year'],
                             athlete_info['School'],
                             conference,
-                            'meet_id',
+                            meet_id,
                             meet_info['Meet Name'],
                             meet_info['Start Date'],
                             meet_info['End Date'],
@@ -60,7 +60,7 @@ def write_athlete_results(dic, gender):
         data=table_list,
         columns=header
     ).to_csv(
-        f'{gender}athlete_results.csv',
+        f'{gender}_athlete_results.csv',
         index=False
     )
 
@@ -95,7 +95,7 @@ def write_team_top_marks(dic, gender):
         data=table_list,
         columns=header
     ).to_csv(
-        f'{gender}top_marks.csv',
+        f'{gender}_top_marks.csv',
         index=False
     )
 
@@ -110,8 +110,6 @@ def main():
     for gender in ['M', 'F']:
         print(gender)
         for conf, conf_obj in conferences.items():
-            if conf != 'GLIAC':
-                continue
             print(conf, end=': ')
             ret_tms[gender][conf] = {}
             ret_ath[gender][conf] = {}
@@ -138,8 +136,10 @@ def main():
                         continue
                     ret_ath[gender][conf][tm].append(athlete)
             print()
+        print(f'{gender} Athlete Results Loaded')
         write_athlete_results(ret_ath, gender=gender)
-        write_team_top_marks(ret_tms, gender=gender)
+        # print(f'{gender} Team Top Marks Loaded')
+        # write_team_top_marks(ret_tms, gender=gender)
     # print(ret_tms)
     # print(ret_ath)
 
