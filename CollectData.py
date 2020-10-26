@@ -168,7 +168,7 @@ def athletes_from_conf():
     return ret_ath
 
 
-def athletes_from_meet(existing_athletes):
+def athletes_from_meet():
     nat_athletes = []
     print('Meets')
     for meetname, years in nat.nat_meet_ids().items():
