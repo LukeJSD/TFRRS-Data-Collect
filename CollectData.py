@@ -30,6 +30,8 @@ def prog_bar(percent, string, time=None, start=False):
 
 def handleTmStr(tm):
     out = tm.replace('.', '')
+    out = out.replace('(', '')
+    out = out.replace(')', '')
     return out
 
 
@@ -105,7 +107,8 @@ def write_athlete_results(dic1, dic2, gender):
         for meet_id, meet_info in athlete.getMeets().items():
             for event, data in meet_info['Results'].items():
                 try:
-                    conference = conferences[athlete_info['School']]
+                    form_school = handleTmStr(athlete_info['School'])
+                    conference = conferences[form_school]
                 except:
                     conference = None
                 row = [
@@ -182,6 +185,7 @@ def athletes_from_conf():
             team_2_conf['M'][mtm] = conf_name
         for ftm in conf_obj.WomensTeams:
             team_2_conf['F'][ftm] = conf_name
+    print(team_2_conf)
     ret_tms = {'M' : {}, 'F' : {}}
     ret_ath = {'M' : {}, 'F' : {}}
     for gender in ['M', 'F']:
@@ -271,6 +275,7 @@ def main():
     ath_meet = athletes_from_meet()
     print(time.time()-t_start)
     write_athlete_results(ath_conf, ath_meet, 'M')
+    write_athlete_results(ath_conf, ath_meet, 'F')
     print(time.time()-t_start)
     print('Done')
 
