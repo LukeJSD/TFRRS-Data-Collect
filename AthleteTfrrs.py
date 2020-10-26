@@ -30,8 +30,8 @@ def season(start, end, meet_name):
     em, ed, ey = [int(month2Num(e)) for e in end.replace(',', '').split(' ')]
     for season in ['Indoor', 'Outdoor', 'Cross Country']:
         if season in meet_name: return sy, season
-    if (sm >= 8 and em <= 12):  return sy, 'Cross Country'
-    elif (sm == 12 and 'Cross Country' not in meet_name):  return sy+1, 'Indoor'
+    if (sm == 12 and 'Cross Country' not in meet_name):  return sy+1, 'Indoor'
+    elif (sm >= 8 and em <= 12):  return sy, 'Cross Country'
     elif (sm >= 1 and em < 3) or (sm == 3 and ed <= 15):  return sy, 'Indoor'
     elif (sm == 3 and ed > 15) or (sm > 3 and em <= 5): return sy, 'Outdoor'
     else:   return sy, 'Out of Season'
@@ -85,6 +85,7 @@ def parseEventName(name):
 
 class Athlete:
     def __init__(self, ID, school="", name=""):
+        self.athlete_id = ID
         # Make the URL
         url = "https://www.tfrrs.org/athletes/" + ID + "/"
         if school:

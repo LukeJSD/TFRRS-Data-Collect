@@ -46,6 +46,7 @@ def handleAthName(string):
 def write_athlete_results(dic1, dic2, gender):
     header = [
         'Name',
+        'Athlete ID',
         'Grade',
         'Year',
         'School',
@@ -79,6 +80,7 @@ def write_athlete_results(dic1, dic2, gender):
                     for event, data in meet_info['Results'].items():
                         row = [
                             athlete_info['Name'],
+                            athlete.athlete_id,
                             athlete_info['Grade'],
                             athlete_info['Year'],
                             athlete_info['School'],
@@ -118,6 +120,7 @@ def write_athlete_results(dic1, dic2, gender):
                     conference = None
                 row = [
                     athlete_info['Name'],
+                    athlete.athlete_id,
                     athlete_info['Grade'],
                     athlete_info['Year'],
                     athlete_info['School'],
