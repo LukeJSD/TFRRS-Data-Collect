@@ -185,7 +185,6 @@ def athletes_from_conf():
             team_2_conf['M'][mtm] = conf_name
         for ftm in conf_obj.WomensTeams:
             team_2_conf['F'][ftm] = conf_name
-    print(team_2_conf)
     ret_tms = {'M' : {}, 'F' : {}}
     ret_ath = {'M' : {}, 'F' : {}}
     for gender in ['M', 'F']:
