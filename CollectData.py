@@ -4,6 +4,8 @@ import ConferenceTfrrs as con
 import NatMeetTFRRS as nat
 import pandas as pd
 
+global team_2_conf, existing_athletes
+
 
 def handleTmStr(tm):
     out = tm.replace('.', '')
@@ -129,7 +131,6 @@ def write_team_top_marks(dic, gender):
 
 
 def athletes_from_conf():
-    global team_2_conf
     team_2_conf = {
         'M' : {},
         'F' : {}
@@ -211,13 +212,11 @@ def athletes_from_meet():
                 athlete = ath.Athlete(
                     id, tm_url_name, formated_name
                 )
-                print(athlete.getAthleteInfo())
                 all_athletes[gender].append(athlete)
     return all_athletes
 
 
 def main():
-    global existing_athletes
     existing_athletes = set()
     ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
