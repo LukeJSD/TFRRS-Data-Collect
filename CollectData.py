@@ -28,7 +28,6 @@ def prog_bar(percent, string, time=None, start=False):
     return string
 
 
-
 def handleTmStr(tm):
     out = tm.replace('.', '')
     return out
@@ -237,6 +236,7 @@ def athletes_from_meet():
                     id, tm_url_name, formated_name
                 )
                 all_athletes[gender].append(athlete)
+                existing_athletes.add(id)
                 t1 = time.time()
                 times.append(t1-t0)
                 string = prog_bar(j/s, string, time=np.mean(np.array([times])), start=(j==0))
