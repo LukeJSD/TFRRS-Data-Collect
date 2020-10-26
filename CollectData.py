@@ -34,8 +34,8 @@ def write_athlete_results(dic1, dic2, gender):
         'Prelim/Final'
     ]
     table_list = []
-    subdic = dic1[gender]
-    for conference, team in subdic.items():
+    subdic1 = dic1[gender]
+    for conference, team in subdic1.items():
         for teamName, athletes in team.items():
             for athlete in athletes:
                 athlete_info = athlete.getAthleteInfo()
@@ -57,8 +57,10 @@ def write_athlete_results(dic1, dic2, gender):
                             data[2]
                         ]
                         table_list.append(row)
-    ls = dic2[gender]
-    for athlete in ls:
+    subdic2 = dic2[gender]
+    unique_athletes = set(subdic2) - set(existing_athletes)
+    for id in unique_athletes:
+        athlete = subdic2[id]
         athlete_info = athlete.getAthleteInfo()
         for meet_id, meet_info in athlete.getMeets().items():
             for event, data in meet_info['Results'].items():
@@ -177,8 +179,8 @@ def athletes_from_meet():
             meet = nat.Meet(id, meetname)
             nat_athletes.append(meet)
     all_athletes = {
-        'M' : [],
-        'F' : []
+        'M' : {},
+        'F' : {}
     }
     print('\nAthletes')
     for i, nat_meet in enumerate(nat_athletes):
@@ -189,18 +191,17 @@ def athletes_from_meet():
                 name, id, tm = athlete
                 formated_name = handleAthName(name)
                 tm_url_name = handleTmStr(tm)
-                if not set([id]).issubset(existing_athletes):
-                    existing_athletes.add(id)
-                    athlete = ath.Athlete(
-                        id, tm_url_name, formated_name
-                    )
-                    all_athletes[gender].append(athlete)
+                existing_athletes.add(id)
+                athlete = ath.Athlete(
+                    id, tm_url_name, formated_name
+                )
+                all_athletes[gender][id].append(athlete)
     return all_athletes
 
 
 def main():
     global existing_athletes
-    existing_athletes = set()
+    existing_athletes = {}
     ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
