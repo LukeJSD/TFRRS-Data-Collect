@@ -27,7 +27,10 @@ def parseEventMark(mark):
         endChars = ["m", "W", "w", "(", "W"]
         for char in endChars:
             if char in mark:
-                return float(mark[0 : mark.index(char)])
+                try:
+                    return float(mark[0 : mark.index(char)])
+                except:
+                    return mark[0 : mark.index(char)]
 
     # Unaccounted for
     return mark
@@ -83,11 +86,18 @@ class Athlete:
         # Format the text into a usable list
         athleteInfo = athleteInfo.split()
         athleteInfo[0] = athleteInfo[0] + " " + athleteInfo[1]
-        grade, year = (
-            athleteInfo[2].split("/")
-            if "REDSHIRT" in athleteInfo[2]
-            else athleteInfo[2].split("-")
-        )
+        try:
+            grade, year = (
+                athleteInfo[2].split("/")
+                if "REDSHIRT" in athleteInfo[2]
+                else athleteInfo[2].split("-")
+            )
+        except Exception as e:
+            print(e, athleteInfo)
+            grade, year = (
+                'Unknown',
+                '0'
+            )
         athleteInfo[1] = grade[1:]
         athleteInfo[2] = year[:-1]
 
@@ -318,4 +328,4 @@ if __name__ == "__main__":
     # Test = Athlete("6092450", "RPI", "Zaire Wilson")
     # Test = Athlete("6996057", "RPI", "Elizabeth Evans")
 
-    print(Test.timesCompetedPerEvent())
+    print(Test.getMeets())

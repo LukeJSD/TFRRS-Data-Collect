@@ -35,32 +35,32 @@ def write_athlete_results(dic, gender):
     table_list = []
     subdic1 = dic[gender]
     for conference, team in subdic1.items():
-        for athlete in team:
-            athlete_info = athlete.getAthleteInfo()
-            for meet_id, meet_info in athlete.getMeets():
-                for event, data in meet_info['Results'].items():
-                    row = [
-                        athlete_info['Name'],
-                        athlete_info['Grade'],
-                        athlete_info['Year'],
-                        athlete_info['School'],
-                        conference,
-                        'meet_id',
-                        meet_info['Meet Name'],
-                        meet_info['Start Date'],
-                        meet_info['End Date'],
-                        event,
-                        data[0],
-                        data[1],
-                        data[2]
-                    ]
-                    table_list.append(row)
-    pd.to_csv(
+        for teamName, athletes in team.items():
+            for athlete in athletes:
+                athlete_info = athlete.getAthleteInfo()
+                for meet_id, meet_info in athlete.getMeets().items():
+                    for event, data in meet_info['Results'].items():
+                        row = [
+                            athlete_info['Name'],
+                            athlete_info['Grade'],
+                            athlete_info['Year'],
+                            athlete_info['School'],
+                            conference,
+                            'meet_id',
+                            meet_info['Meet Name'],
+                            meet_info['Start Date'],
+                            meet_info['End Date'],
+                            event,
+                            data[0],
+                            data[1],
+                            data[2]
+                        ]
+                        table_list.append(row)
+    pd.DataFrame(
+        data=table_list,
+        columns=header
+    ).to_csv(
         f'{gender}athlete_results.csv',
-        pd.DataFrame(
-            data=table_list,
-            columns=header
-        ),
         index=False
     )
 
@@ -91,12 +91,11 @@ def write_team_top_marks(dic, gender):
                     tp['TIME/MARK'][i]
                 ]
                 table_list.append(row)
-    pd.to_csv(
+    pd.DataFrame(
+        data=table_list,
+        columns=header
+    ).to_csv(
         f'{gender}top_marks.csv',
-        pd.DataFrame(
-            data=table_list,
-            columns=header
-        ),
         index=False
     )
 
@@ -111,6 +110,8 @@ def main():
     for gender in ['M', 'F']:
         print(gender)
         for conf, conf_obj in conferences.items():
+            if conf != 'GLIAC':
+                continue
             print(conf, end=': ')
             ret_tms[gender][conf] = {}
             ret_ath[gender][conf] = {}
@@ -121,8 +122,8 @@ def main():
                 try:
                     curr_team = tms.Team(st, gender, tm_url_name.replace(' ', '_'))
                 except Exception as e:
-                    print(e)
-                    print(tm, gender, end='\n\t\t')
+                    print('\n', e)
+                    print(tm, gender, end='\n\t\t\t')
                     continue
                 ath_IDs = curr_team.AthleteIDs
                 ret_tms[gender][conf][tm] = curr_team
