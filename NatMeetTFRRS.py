@@ -27,10 +27,9 @@ class Meet:
 
 
     def getAthleteInfo(self):
-        links = self.soup.find_all("a")
         athletes = {
-            'f' : [],
-            'm' : []
+            'F' : {},
+            'M' : {}
         }
         rows = self.soup.find_all('tr')
 
@@ -48,9 +47,9 @@ class Meet:
                         temp.append(link_id)
                     if "tfrrs.org/teams/" in str(link):
                         team = str(link)[47: str(link).index(".html")].replace('_', ' ')
-                        gender = str(link)[45]
+                        gender = str(link)[45].upper()
                         temp.append(team)
-                athletes[gender].append(temp)
+                athletes[gender][link_id] = temp
 
         return athletes
 

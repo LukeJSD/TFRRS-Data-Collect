@@ -2,7 +2,6 @@ import AthleteTfrrs as ath
 import TeamTfrrs as tms
 import ConferenceTfrrs as con
 import NatMeetTFRRS as nat
-import numpy as np
 import pandas as pd
 
 
@@ -15,6 +14,8 @@ def handleAthName(string):
     if ', ' in string:
         sep = string.split(', ')
         return ' '.join(sep)
+    else:
+        return string
 
 
 def write_athlete_results(dic1, dic2, gender):
@@ -57,13 +58,16 @@ def write_athlete_results(dic1, dic2, gender):
                             data[2]
                         ]
                         table_list.append(row)
-    subdic2 = dic2[gender]
-    unique_athletes = set(subdic2) - existing_athletes
-    for id in unique_athletes:
-        athlete = subdic2[id]
+    conferences = team_2_conf[gender]
+    ls = dic2[gender]
+    for athlete in ls:
         athlete_info = athlete.getAthleteInfo()
         for meet_id, meet_info in athlete.getMeets().items():
             for event, data in meet_info['Results'].items():
+                try:
+                    conference = conferences[athlete_info['School']]
+                except:
+                    conference = None
                 row = [
                     athlete_info['Name'],
                     athlete_info['Grade'],
@@ -125,9 +129,19 @@ def write_team_top_marks(dic, gender):
 
 
 def athletes_from_conf():
+    global team_2_conf
+    team_2_conf = {
+        'M' : {},
+        'F' : {}
+    }
     conferences = {}
     for conf_id, conf_name in con.d2_conference_IDs().items():
-        conferences[conf_name] = con.Conference(conf_id)
+        conf_obj = con.Conference(conf_id)
+        conferences[conf_name] = conf_obj
+        for mtm in conf_obj.MensTeams:
+            team_2_conf['M'][mtm] = conf_name
+        for ftm in conf_obj.WomensTeams:
+            team_2_conf['F'][ftm] = conf_name
     ret_tms = {'M' : {}, 'F' : {}}
     ret_ath = {'M' : {}, 'F' : {}}
     for gender in ['M', 'F']:
@@ -179,15 +193,17 @@ def athletes_from_meet():
             meet = nat.Meet(id, meetname)
             nat_athletes.append(meet)
     all_athletes = {
-        'M' : {},
-        'F' : {}
+        'M' : [],
+        'F' : []
     }
     print('\nAthletes')
     for i, nat_meet in enumerate(nat_athletes):
-        print(f'{i}/{nat_athletes}', end=', ')
+        print(f'{i+1}/{len(nat_athletes)}', end=', ')
         for g, athletes in nat_meet.AthleteInfo.items():
             gender = g.upper()
-            for athlete in athletes:
+            unique_athletes = set(athletes) - existing_athletes
+            for id in unique_athletes:
+                athlete = athletes[id]
                 name, id, tm = athlete
                 formated_name = handleAthName(name)
                 tm_url_name = handleTmStr(tm)
@@ -195,7 +211,8 @@ def athletes_from_meet():
                 athlete = ath.Athlete(
                     id, tm_url_name, formated_name
                 )
-                all_athletes[gender][id] = athlete
+                print(athlete.getAthleteInfo())
+                all_athletes[gender].append(athlete)
     return all_athletes
 
 
@@ -203,6 +220,7 @@ def main():
     global existing_athletes
     existing_athletes = set()
     ath_conf = athletes_from_conf()
+    ath_conf = {'M':{},'F':{}}
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
 

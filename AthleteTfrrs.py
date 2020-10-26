@@ -36,6 +36,13 @@ def parseEventMark(mark):
     return mark
 
 
+def grade_index(ls):
+    for i, e in enumerate(ls):
+        if 'FR-' in e or 'SO-' in e or 'JR-' in e or 'SR-' in e or 'REDSHIRT/' in e:
+            return i
+    return -1
+
+
 def parseEventName(name):
     cleaned = str(name).replace("  ", " ") if name != "10000" else "10,000"
     return cleaned.replace(".0", "")
@@ -85,19 +92,26 @@ class Athlete:
 
         # Format the text into a usable list
         athleteInfo = athleteInfo.split()
-        athleteInfo[0] = athleteInfo[0] + " " + athleteInfo[1]
-        try:
+        grd = grade_index(athleteInfo)
+        if grd != -1:
             grade, year = (
-                athleteInfo[2].split("/")
-                if "REDSHIRT" in athleteInfo[2]
-                else athleteInfo[2].split("-")
+                athleteInfo[grd].split("/")
+                if "REDSHIRT" in athleteInfo[grd]
+                else athleteInfo[grd].split("-")
             )
-        except Exception as e:
-            print(e, athleteInfo)
+            team = ' '.join([e for e in athleteInfo[grd+1:]])
+            name = ' '.join([e for e in athleteInfo[:grd]])
+            athleteInfo[0] = name
+        else:
             grade, year = (
-                'Unknown',
+                ' Unknown',
                 '0'
             )
+            if len(athleteInfo) == 3:
+                team = athleteInfo[-1]
+            else:
+                team = ' '.join([e for e in athleteInfo[2:]])
+            athleteInfo[0] = athleteInfo[0] + " " + athleteInfo[1]
         athleteInfo[1] = grade[1:]
         athleteInfo[2] = year[:-1]
 
@@ -108,8 +122,9 @@ class Athlete:
             "Year": int(athleteInfo[2])
             if athleteInfo[2].isnumeric()
             else athleteInfo[2],
-            "School": athleteInfo[3],
+            "School": team,
         }
+
 
     def getPersonalRecords(self):
         # If not created already get the dataframes
