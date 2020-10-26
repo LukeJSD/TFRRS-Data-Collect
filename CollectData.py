@@ -183,7 +183,7 @@ def athletes_from_meet():
     print('\nAthletes')
     for i, nat_meet in enumerate(nat_athletes):
         print(f'{i}/{nat_athletes}', end=', ')
-        for g, athletes in nat_meet.items():
+        for g, athletes in nat_meet.AthleteInfo.items():
             gender = g.upper()
             for athlete in athletes:
                 name, id, tm = athlete
