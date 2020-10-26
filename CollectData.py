@@ -58,7 +58,7 @@ def write_athlete_results(dic1, dic2, gender):
                         ]
                         table_list.append(row)
     subdic2 = dic2[gender]
-    unique_athletes = set(subdic2) - set(existing_athletes)
+    unique_athletes = set(subdic2) - existing_athletes
     for id in unique_athletes:
         athlete = subdic2[id]
         athlete_info = athlete.getAthleteInfo()
@@ -201,7 +201,7 @@ def athletes_from_meet():
 
 def main():
     global existing_athletes
-    existing_athletes = {}
+    existing_athletes = set()
     ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
