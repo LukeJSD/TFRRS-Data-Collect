@@ -277,6 +277,7 @@ def main():
     ath_meet = athletes_from_meet()
     print(time.time()-t_start)
     write_athlete_results(ath_conf, ath_meet, 'M')
+    print(time.time()-t_start)
     write_athlete_results(ath_conf, ath_meet, 'F')
     print(time.time()-t_start)
     print('Done')
