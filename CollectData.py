@@ -107,7 +107,6 @@ def athletes_from_conf():
         conferences[conf_name] = con.Conference(conf_id)
     ret_tms = {'M' : {}, 'F' : {}}
     ret_ath = {'M' : {}, 'F' : {}}
-    existing_athletes = set()
     for gender in ['M', 'F']:
         print(gender)
         for conf, conf_obj in conferences.items():
@@ -175,6 +174,7 @@ def athletes_from_meet(existing_athletes):
 
 def main():
     global existing_athletes
+    existing_athletes = set()
     ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
