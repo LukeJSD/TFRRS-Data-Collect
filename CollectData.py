@@ -195,7 +195,7 @@ def athletes_from_meet():
                 athlete = ath.Athlete(
                     id, tm_url_name, formated_name
                 )
-                all_athletes[gender][id].append(athlete)
+                all_athletes[gender][id] = athlete
     return all_athletes
 
 
