@@ -189,7 +189,7 @@ def athletes_from_meet(existing_athletes):
                 name, id, tm = athlete
                 formated_name = handleAthName(name)
                 tm_url_name = handleTmStr(tm)
-                if set([id]).issubet(existing_athletes):
+                if not set([id]).issubet(existing_athletes):
                     existing_athletes.add(id)
                     athlete = ath.Athlete(
                         id, tm_url_name, formated_name
