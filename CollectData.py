@@ -17,7 +17,7 @@ def handleAthName(string):
         return ' '.join(sep)
 
 
-def write_athlete_results(dic, ls, gender):
+def write_athlete_results(dic1, dic2, gender):
     header = [
         'Name',
         'Grade',
@@ -34,8 +34,8 @@ def write_athlete_results(dic, ls, gender):
         'Prelim/Final'
     ]
     table_list = []
-    subdic1 = dic[gender]
-    for conference, team in subdic1.items():
+    subdic = dic1[gender]
+    for conference, team in subdic.items():
         for teamName, athletes in team.items():
             for athlete in athletes:
                 athlete_info = athlete.getAthleteInfo()
@@ -57,6 +57,7 @@ def write_athlete_results(dic, ls, gender):
                             data[2]
                         ]
                         table_list.append(row)
+    ls = dic2[gender]
     for athlete in ls:
         athlete_info = athlete.getAthleteInfo()
         for meet_id, meet_info in athlete.getMeets().items():
@@ -190,6 +191,7 @@ def athletes_from_meet(existing_athletes):
                         id, tm_url_name, formated_name
                     )
                     all_athletes[gender].append(athlete)
+    return all_athletes
 
 
 def main():
