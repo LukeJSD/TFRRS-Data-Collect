@@ -60,9 +60,16 @@ def write_athlete_results(dic1, dic2, gender):
     table_list = []
     subdic1 = dic1[gender]
     print('write from conferences')
+    cf = 0
     for conference, team in subdic1.items():
+        cf += 1
+        print(conference, f'{cf}/{len(subdic1)}')
         for teamName, athletes in team.items():
-            for athlete in athletes:
+            s = len(athletes)
+            times = []
+            t0 = time.time()
+            string = ''
+            for j, athlete in enumerate(athletes):
                 athlete_info = athlete.getAthleteInfo()
                 for meet_id, meet_info in athlete.getMeets().items():
                     for event, data in meet_info['Results'].items():
@@ -82,10 +89,18 @@ def write_athlete_results(dic1, dic2, gender):
                             data[2]
                         ]
                         table_list.append(row)
+                t1 = time.time()
+                times.append(t1 - t0)
+                string = prog_bar(j / s, string, time=np.mean(np.array([times])), start=(j == 0))
+                t0 = t1
     conferences = team_2_conf[gender]
     ls = dic2[gender]
     print('write from meets')
-    for athlete in ls:
+    s = len(ls)
+    times = []
+    t0 = time.time()
+    string = ''
+    for j, athlete in enumerate(ls):
         athlete_info = athlete.getAthleteInfo()
         for meet_id, meet_info in athlete.getMeets().items():
             for event, data in meet_info['Results'].items():
@@ -109,6 +124,10 @@ def write_athlete_results(dic1, dic2, gender):
                     data[2]
                 ]
                 table_list.append(row)
+        t1 = time.time()
+        times.append(t1 - t0)
+        string = prog_bar(j / s, string, time=np.mean(np.array([times])), start=(j == 0))
+        t0 = t1
     print('Write file')
     pd.DataFrame(
         data=table_list,
