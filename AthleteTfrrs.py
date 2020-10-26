@@ -5,6 +5,38 @@ import numpy as np
 from bs4 import BeautifulSoup
 
 
+def season(start, end, meet_name):
+    def month2Num(m):
+        if m.isnumeric():   return m
+        numToMonth = {
+            "Jan" : 1,
+            "Feb" : 2,
+            "Mar" : 3,
+            "Apr" : 4,
+            "May": 5,
+            "Jun" : 6,
+            "Jul" : 7,
+            "Aug" : 8,
+            "Sep" : 9,
+            "Oct" : 10,
+            "Nov" : 11,
+            "Dec" : 12,
+        }
+        return numToMonth[m]
+    # data format: "mon dy, year"
+    assert len(start.split(' ')) == 3
+    assert len(end.split(' ')) == 3
+    sm, sd, sy = [int(month2Num(s)) for s in start.replace(',', '').split(' ')]
+    em, ed, ey = [int(month2Num(e)) for e in end.replace(',', '').split(' ')]
+    for season in ['Indoor', 'Outdoor', 'Cross Country']:
+        if season in meet_name: return sy, season
+    if (sm >= 8 and em <= 12):  return sy, 'Cross Country'
+    elif (sm == 12 and 'Cross Country' not in meet_name):  return sy+1, 'Indoor'
+    elif (sm >= 1 and em < 3) or (sm == 3 and ed <= 15):  return sy, 'Indoor'
+    elif (sm == 3 and ed > 15) or (sm > 3 and em <= 5): return sy, 'Outdoor'
+    else:   return sy, 'Out of Season'
+
+
 def parseEventMark(mark):
     # try to make pandas use float to avoid importing all of numpy
     if isinstance(mark, np.float64) or isinstance(mark, float):
@@ -220,6 +252,9 @@ class Athlete:
         meetInfo["Meet Name"] = Meet
         meetInfo["Start Date"] = startDate
         meetInfo["End Date"] = endDate
+        season_year, season_type = season(startDate, endDate, Meet)
+        meetInfo['Year'] = season_year
+        meetInfo['Season'] = season_type
 
         # Add a column and rename columns
         df = pd.concat(
