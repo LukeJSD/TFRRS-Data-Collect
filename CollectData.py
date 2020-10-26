@@ -170,15 +170,19 @@ def athletes_from_conf():
 
 def athletes_from_meet(existing_athletes):
     nat_athletes = []
+    print('Meets')
     for meetname, years in nat.nat_meet_ids().items():
         for year, id in years.items():
+            print(year, end=', ')
             meet = nat.Meet(id, meetname)
             nat_athletes.append(meet)
     all_athletes = {
         'M' : [],
         'F' : []
     }
-    for nat_meet in nat_athletes:
+    print('\nAthletes')
+    for i, nat_meet in enumerate(nat_athletes):
+        print(f'{i}/{nat_athletes}', end=', ')
         for g, athletes in nat_meet.items():
             gender = g.upper()
             for athlete in athletes:
