@@ -1,6 +1,7 @@
 import AthleteTfrrs as ath
 import TeamTfrrs as tms
 import ConferenceTfrrs as con
+import NatMeetTFRRS as nat
 import numpy as np
 import pandas as pd
 
@@ -16,7 +17,7 @@ def handleAthName(string):
         return ' '.join(sep)
 
 
-def write_athlete_results(dic, gender):
+def write_athlete_results(dic, ls, gender):
     header = [
         'Name',
         'Grade',
@@ -100,13 +101,13 @@ def write_team_top_marks(dic, gender):
     )
 
 
-def main():
+def athletes_from_conf():
     conferences = {}
     for conf_id, conf_name in con.d2_conference_IDs().items():
         conferences[conf_name] = con.Conference(conf_id)
-    # print(conferences)
     ret_tms = {'M' : {}, 'F' : {}}
     ret_ath = {'M' : {}, 'F' : {}}
+    existing_athletes = set()
     for gender in ['M', 'F']:
         print(gender)
         for conf, conf_obj in conferences.items():
@@ -118,7 +119,9 @@ def main():
                 print(tm, end=', ')
                 tm_url_name = handleTmStr(tm)
                 try:
-                    curr_team = tms.Team(st, gender, tm_url_name.replace(' ', '_'))
+                    curr_team = tms.Team(
+                        st, gender, tm_url_name.replace(' ', '_')
+                    )
                 except Exception as e:
                     print('\n', e)
                     print(tm, gender, end='\n\t\t\t')
@@ -127,21 +130,54 @@ def main():
                 ret_tms[gender][conf][tm] = curr_team
                 ret_ath[gender][conf][tm] = []
                 for name, id in ath_IDs.items():
+                    existing_athletes.add(id)
                     formated_name = handleAthName(name)
                     try:
-                        athlete = ath.Athlete(id, tm_url_name, formated_name)
+                        athlete = ath.Athlete(
+                            id,
+                            tm_url_name,
+                            formated_name
+                        )
                     except Exception as e:
                         print(e)
-                        print(name, end='\n\t\t')
+                        print(name, end='\n\t\t\t')
                         continue
                     ret_ath[gender][conf][tm].append(athlete)
             print()
         print(f'{gender} Athlete Results Loaded')
-        write_athlete_results(ret_ath, gender=gender)
-        # print(f'{gender} Team Top Marks Loaded')
-        # write_team_top_marks(ret_tms, gender=gender)
-    # print(ret_tms)
-    # print(ret_ath)
+    return ret_ath
+
+
+def athletes_from_meet(existing_athletes):
+    nat_athletes = []
+    for meetname, years in nat.nat_meet_ids().items():
+        for year, id in years.items():
+            meet = nat.Meet(id, meetname)
+            nat_athletes.append(meet)
+    all_athletes = {
+        'M' : [],
+        'F' : []
+    }
+    for nat_meet in nat_athletes:
+        for g, athletes in nat_meet.items():
+            gender = g.upper()
+            for athlete in athletes:
+                name, id, tm = athlete
+                formated_name = handleAthName(name)
+                tm_url_name = handleTmStr(tm)
+                if set([id]).issubet(existing_athletes):
+                    existing_athletes.add(id)
+                    athlete = ath.Athlete(
+                        id, tm_url_name, formated_name
+                    )
+                    all_athletes[gender].append(athlete)
+
+
+def main():
+    global existing_athletes
+    ath_conf = athletes_from_conf()
+    ath_meet = athletes_from_meet()
+    write_athlete_results(ath_conf, ath_meet, 'M')
 
 
 if __name__ == '__main__':

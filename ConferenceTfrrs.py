@@ -1,8 +1,6 @@
 import pandas as pd
 import requests
-import re
 from bs4 import BeautifulSoup
-from AthleteTfrrs import Athlete
 
 class Conference:
     def __init__(self, ID):
