@@ -189,7 +189,7 @@ def athletes_from_meet():
                 name, id, tm = athlete
                 formated_name = handleAthName(name)
                 tm_url_name = handleTmStr(tm)
-                if not {id}.issubset(existing_athletes):
+                if not set([id]).issubset(existing_athletes):
                     existing_athletes.add(id)
                     athlete = ath.Athlete(
                         id, tm_url_name, formated_name
@@ -200,7 +200,7 @@ def athletes_from_meet():
 
 def main():
     global existing_athletes
-    existing_athletes = {}
+    existing_athletes = set()
     ath_conf = athletes_from_conf()
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
