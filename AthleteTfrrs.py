@@ -10,6 +10,9 @@ def parseEventMark(mark):
     if isinstance(mark, np.float64) or isinstance(mark, float):
         return float(mark)
 
+    if isinstance(mark, np.int64) or isinstance(mark, int):
+        return int(mark)
+
     # Some results are just the float
     if mark.isalpha():
         return mark
