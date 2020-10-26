@@ -220,7 +220,6 @@ def main():
     global existing_athletes
     existing_athletes = set()
     ath_conf = athletes_from_conf()
-    ath_conf = {'M':{},'F':{}}
     ath_meet = athletes_from_meet()
     write_athlete_results(ath_conf, ath_meet, 'M')
 
