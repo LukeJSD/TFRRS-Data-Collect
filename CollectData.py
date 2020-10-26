@@ -57,6 +57,26 @@ def write_athlete_results(dic, ls, gender):
                             data[2]
                         ]
                         table_list.append(row)
+    for athlete in ls:
+        athlete_info = athlete.getAthleteInfo()
+        for meet_id, meet_info in athlete.getMeets().items():
+            for event, data in meet_info['Results'].items():
+                row = [
+                    athlete_info['Name'],
+                    athlete_info['Grade'],
+                    athlete_info['Year'],
+                    athlete_info['School'],
+                    conference,
+                    meet_id,
+                    meet_info['Meet Name'],
+                    meet_info['Start Date'],
+                    meet_info['End Date'],
+                    event,
+                    data[0],
+                    data[1],
+                    data[2]
+                ]
+                table_list.append(row)
     pd.DataFrame(
         data=table_list,
         columns=header
