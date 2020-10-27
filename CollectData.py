@@ -104,6 +104,7 @@ def write_athlete_results(dic1, dic2, gender):
             prog_bar(1.00, string+'#', time=np.mean(np.array([times])))
     conferences = team_2_conf[gender]
     ls = dic2[gender]
+    subconf = conferences[gender]
     print('write from meets')
     s = len(ls)
     times = []
@@ -115,7 +116,7 @@ def write_athlete_results(dic1, dic2, gender):
             for event, data in meet_info['Results'].items():
                 try:
                     form_school = handleTmStr(athlete_info['School'])
-                    conference = conferences[form_school]
+                    conference = subconf[form_school]
                 except:
                     conference = None
                 row = [
