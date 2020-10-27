@@ -224,22 +224,20 @@ class Athlete:
         if not self.soup:
             self.soup = BeautifulSoup(self.HTML, "html5lib")
         links = self.soup.find_all("a")
-        IDs = []
+        IDs = set()
 
         # Pull the meet ID from href URLs
         for link in links:
-            if re.search('href="//www.tfrrs.org/results/\d{5,6}/\w+,{0,1}_', str(link)):
+            if re.search('href="//www.tfrrs.org/results/', str(link)):
                 link = str(link)
-                idStart = re.search("/results/\d{5,6}/", link).start() + len(
-                    "/results/"
-                )
-                IDs += [link[idStart : idStart + 5]]
+                if '/xc/' in link:
+                    id = link[link.find('/results/') + 12:link.find('/results/') + 17]
+                else:
+                    id = link[link.find('/results/') + 9:link.find('/results/') + 14]
+                IDs.add(id)
+        IDs = [a for a in IDs]
 
         return IDs
-
-    # REMOVE THIS
-    def notCrossCountry(self, df):
-        return "K" not in str(df.iloc[0, 0])
 
     def getOneMeet(self, df, ID):
         # Get meet name and date
@@ -276,6 +274,8 @@ class Athlete:
         def onlyNumber(place):
             # Remove last four digits (the round details) and take only digits
             number = ""
+            if not (place[-3] == '(' and place[-1] == ')'):
+                place += ' (R)'
             for char in place[0:-4]:
                 if not char.isalpha():
                     number += char
@@ -315,8 +315,7 @@ class Athlete:
         # Loop getting the meets
         meetData = {}
         for df, ID in zip(dfs[:firstNonResult], IDs):
-            if self.notCrossCountry(df):
-                meetData[ID] = self.getOneMeet(df, ID)
+            meetData[ID] = self.getOneMeet(df, ID)
 
         return meetData
 
@@ -376,10 +375,6 @@ class Athlete:
 
 
 if __name__ == "__main__":
-    Test = Athlete("6092422", "RPI", "Mark Shapiro")
-    # Test = Athlete("6092256", "RPI", "Patrick Butler")
-    # Test = Athlete("5997832", "RPI", "Alex Skender")
-    # Test = Athlete("6092450", "RPI", "Zaire Wilson")
-    # Test = Athlete("6996057", "RPI", "Elizabeth Evans")
-
-    print(Test.getMeets())
+    Test = Athlete("6603636", "Colorado Mines", "Luke Julian")
+    for id, mt in Test.getMeets().items():
+        print(mt)

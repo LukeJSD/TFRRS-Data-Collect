@@ -104,7 +104,7 @@ def write_athlete_results(dic1, dic2, gender):
             prog_bar(1.00, string+'#', time=np.mean(np.array([times])))
     conferences = team_2_conf[gender]
     ls = dic2[gender]
-    subconf = conferences[gender]
+    subconf = team_2_conf[gender]
     print('write from meets')
     s = len(ls)
     times = []
