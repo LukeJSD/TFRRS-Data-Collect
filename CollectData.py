@@ -48,7 +48,7 @@ def write_athlete_results(dic1, dic2, gender):
         'Name',
         'Athlete ID',
         'Grade',
-        'Year',
+        'Academic_Year',
         'School',
         'Conference',
         'Meet_ID',
