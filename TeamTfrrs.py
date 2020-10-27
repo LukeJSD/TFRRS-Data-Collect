@@ -8,7 +8,7 @@ from AthleteTfrrs import Athlete
 class Team:
     def __init__(self, State, Gender, Name):
         # Construct the url and make the request
-        url_stub = "http://www.tfrrs.org/teams/{}_college_{}_{}".format(
+        url_stub = "http://www.tfrrs.org/teams/xc/{}_college_{}_{}".format(
             State, Gender.lower(), Name
         )
         headers = {
