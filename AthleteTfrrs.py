@@ -151,6 +151,13 @@ class Athlete:
         athleteInfo[1] = grade[1:]
         athleteInfo[2] = year[:-1]
 
+        gender = 'n'
+        links = Test.soup.find_all("a")
+        # Pull the meet ID from href URLs
+        for link in links:
+            if re.search('href="//www.tfrrs.org/teams/', str(link)):
+                gender = str(link)[42]
+
         # Put it into data
         return {
             "Name": athleteInfo[0],
@@ -159,6 +166,7 @@ class Athlete:
             if athleteInfo[2].isnumeric()
             else athleteInfo[2],
             "School": team,
+            "Gender": gender
         }
 
 
@@ -376,5 +384,5 @@ class Athlete:
 
 if __name__ == "__main__":
     Test = Athlete("6603636", "Colorado Mines", "Luke Julian")
-    for id, mt in Test.getMeets().items():
-        print(mt)
+    print(Test.getAthleteInfo())
+
